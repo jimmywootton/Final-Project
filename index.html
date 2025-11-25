@@ -63,6 +63,18 @@
     <!-- Top: Bar chart -->
     <svg id="barChart" width="900" height="280"></svg>
 
+    <div id="brushHelp" 
+     style="
+        margin: 10px 0 6px 4px; 
+        font-size: 13px; 
+        color: #555;
+        opacity: 0;
+        transition: opacity 0.5s;
+     ">
+    Tip: Drag the window to move it across time, or drag its edges to resize it.
+    </div>
+
+
     <!-- Bottom: Time bar with brush -->
     <svg id="timeBrush" width="900" height="140"></svg>
 
@@ -229,6 +241,13 @@
             x0 + (x1 - x0) * 0.7
         ];
         brushSelection.call(brush.move, initialSel);
+
+        // After brushSelection.call(brush.move, initialSel);
+
+        setTimeout(() => {
+            document.getElementById("brushHelp").style.opacity = 1;
+        }, 300);
+
 
         // ====== PLAYBACK ANIMATION ======
 
