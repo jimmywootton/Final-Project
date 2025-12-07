@@ -14,9 +14,9 @@ h1 {
     font-size: 32px;
 }
 
-/* ===== Default Section Styling ===== */
+/* ===== Default Section Styling (EXCLUDES HERO) ===== */
 
-section {
+section:not(.hero) {
     max-width: 900px;
     margin: 50px auto;
     padding: 30px;
@@ -78,4 +78,72 @@ svg {
 
 #writeup p {
     text-align: justify;
+}
+
+/* ===== Fullscreen Hero Section ===== */
+
+.hero {
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(to bottom, #4facfe, #00f2fe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    color: white;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Hero Text */
+.hero-content h1 {
+    font-size: 6rem;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.hero-content p {
+    margin-top: 20px;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+/* Scroll hint */
+.scroll-hint {
+    position: absolute;
+    bottom: 25px;
+    text-align: center;
+    animation: fadeBounce 1.8s infinite;
+}
+
+.scroll-hint p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.scroll-hint span {
+    font-size: 2rem;
+}
+
+/* Scroll hint animation */
+@keyframes fadeBounce {
+    0% { opacity: 0.4; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(8px); }
+    100% { opacity: 0.4; transform: translateY(0); }
+}
+
+/* ===== Scroll Reveal Sections ===== */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
