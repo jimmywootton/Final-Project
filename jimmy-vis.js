@@ -178,7 +178,6 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
             document.getElementById("brushHelp").style.opacity = 1;
         }, 300);
 
-
         // ====== PLAYBACK ANIMATION ======
 
         let playing = false;
@@ -271,10 +270,6 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
         // Compute % change for each series
         const seriesData = valueColumns.map(col => {
-
-
-
-
             const startVal = first[col];
             const endVal = last[col];
             let pct = null;
@@ -315,6 +310,14 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
         // Update y axis
         barG.select(".y-axis").call(yBarAxis);
+
+        // ⭐ Make Y-axis tick labels bigger (only numeric ticks)
+        barG.selectAll(".y-axis .tick text")
+            .filter(function() {
+                return !isNaN(parseFloat(this.textContent.trim()));
+            })
+            .style("font-size", "18px")
+            .style("font-weight", "400");
 
         // Update zero line
         const zeroY = yBar(0);
@@ -378,6 +381,8 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
             .attr("class", "bar-label")
             .attr("x", d => xBand(d.key) + xBand.bandwidth() / 2)
             .attr("y", d => (d.pct >= 0 ? yBar(d.pct) : zeroY) - 4)
+            .style("font-size", "24px")     // ⭐ MAKE LABELS BIGGER
+            .style("font-weight", "600")    // optional: bold-ish
             .text(d => d.pct.toFixed(1) + "%")
             .merge(labels)
             .transition()
