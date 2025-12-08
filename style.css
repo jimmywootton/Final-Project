@@ -1,7 +1,8 @@
 /* ===== Global Page Styling ===== */
 
 body {
-    font-family: Georgia, serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 0;
     padding: 0;
     background: #f7f9fc;
     color: #222;
@@ -54,17 +55,10 @@ svg {
 
 /* Legend styling  */
 .legend {
-    font-family: Georgia, serif;
     display: flex;
     justify-content: center;
     margin-top: 10px;
     flex-wrap: wrap;
-}
-
-#vis3, #vis1, #writeup {
-    max-width: 1200px !important;   /* wider */
-    padding: 50px 60px !important;  /* more interior space */
-    border-radius: 18px;
 }
 
 #vis3.compact-section {
@@ -163,6 +157,5 @@ svg {
 .chart-row {
     display: flex;        /* Flexbox, activates horizontal alignment capabilities */
     flex-direction: row;  /* Left-to-Right flow */
-    align-items: flex-start;
-    gap: 40px;
+    align-items: flex-start; 
 }
