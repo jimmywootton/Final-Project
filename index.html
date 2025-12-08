@@ -21,30 +21,30 @@
         </div>
     </section>
 
-    <h1>Final Project Prototype</h1>
-    <p style="text-align:center; margin-top: -10px; font-size: 16px; color:#555;">
-        By: Brian Jing &nbsp;•&nbsp; James Wootton &nbsp;•&nbsp; Su Love Wai &nbsp;•&nbsp; Taylor Chiu
+    <h1>Cryptocurrency Price Change Explorer</h1>
+    <p style="text-align:center; margin-top: -10px; font-size: 18px; color:#555;">
+        Brian Jing &nbsp;•&nbsp; James Wootton &nbsp;•&nbsp; Su Love Wai &nbsp;•&nbsp; Taylor Chiu
     </p>
 
     <!-- JIMMY (Interactive Vis) -->
     <section id="vis3" class="compact-section">
-        <h2>Interactive Crypto Rate-of-Change Explorer</h2>
+        <h2>Avg Daily Price Change Over Interval (%USD)</h2>
 
         <div class="chart-row">
             <svg id="barChart" width="900" height="280"></svg>
             <div id="legend"></div>
         </div>
 
-        <div id="windowLabel" style="text-align:center; margin-top:5px; font-size:14px;">
-            Window:
+        <div id="brushHelp" style="text-align:center; font-size:14px; opacity:0;">
+            *Drag the shaded window on the line graph below to move the time interval, or drag its edges to resize it!*
         </div>
 
-        <div style="text-align:center; margin:10px 0;">
+        <div style="text-align:center; margin:20px 0;">
             <button id="playButton">▶ Play</button>
         </div>
 
-        <div id="brushHelp" style="text-align:center; font-size:13px; opacity:0;">
-            Tip: Drag the window to move it across time, or drag its edges to resize it.
+        <div id="windowLabel" style="text-align:center; margin-top:6px; font-size:16px;">
+            Time Range:
         </div>
 
         <svg id="timeBrush" width="900" height="140"></svg>
