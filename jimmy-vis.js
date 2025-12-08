@@ -391,6 +391,18 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
         
         // Clearing duplicate items if re-run:
         legend.selectAll(".legend-item").remove();
+        legend.selectAll(".legend-title").remove();
+
+        // Adding legend title:
+        legend.append("div")
+            .attr("class", "legend-title")
+            .text("Cryptocurrency") // <--- Your Title Here
+            .style("font-weight", "bold")
+            .style("font-family", "sans-serif")
+            .style("margin-bottom", "10px")
+            .style("font-size", "16px")
+            .style("border-bottom", "1px solid #eee") // Optional: adds a separator line
+            .style("padding-bottom", "5px");
 
         const items = legend
             .selectAll(".legend-item")
