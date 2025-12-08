@@ -409,11 +409,11 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
             .style("height", "15px")
             .style("margin-right", "8px")
             .style("border-radius", "3px")
-            .style("background-color", d => color(d)); // Uses schemeTableau10
+            .style("background-color", d => color(d)); // Uses schemeTableau10, and just includes the name of the coin
         
         // Adding the text elements:
         items.append("span")
-            .text(d => d)
+            .text(d => d.replace("USDT_Open", ""))
             .style("font-size", "14px")
             .style("font-family", "sans-serif");
     }
