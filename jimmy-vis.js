@@ -23,8 +23,16 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
     const barWidth = +barSvg.attr("width");
     const barHeight = +barSvg.attr("height");
 
+    // Allowing the bar chart to scale down to fix the flexbox container:
+    barSvg
+        .attr("viewBox", `0 0 ${barWidth} ${barHeight}`)
+        .style("width", "100%")
+        .style("height", "auto")
+        .style("min-width", "0"); // Allows flexbox to shrink it below its content size
+
     const brushWidth = +brushSvg.attr("width");
     const brushHeight = +brushSvg.attr("height");
+    
 
     const barMargin = { top: 20, right: 20, bottom: 40, left: 70 };
     const barInnerWidth = barWidth - barMargin.left - barMargin.right;
@@ -392,6 +400,8 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
             .style("padding", "15px")
             .style("background-color", "white")
             .style("display", "inline-block")
+            .style("vertical-align", "top") // Ensure top alignment
+            .style("margin-left", "20px")   // Ensure spacing from chart
             .style("box-shadow", "2px 2px 5px rgba(0,0,0,0.1)");
         
         // Clearing duplicate items if re-run:

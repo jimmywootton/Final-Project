@@ -61,8 +61,12 @@ svg {
     flex-wrap: wrap;
 }
 
+#vis3.compact-section {
+    padding: 40px 40px !important;
+}
+
 .compact-section {
-    padding: 12px 20px !important;
+    padding: 20px 27px !important;
 }
 
 .compact-section h2 {
