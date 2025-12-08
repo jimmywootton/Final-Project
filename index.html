@@ -28,26 +28,31 @@
 
     <!-- JIMMY (Interactive Vis) -->
     <section id="vis3" class="compact-section">
-        <h2>Avg Daily Price Change Over Interval (%USD)</h2>
+        <h2>Avg Daily Price Change Over Interval (%)</h2>
 
         <div class="chart-row">
             <svg id="barChart" width="900" height="280"></svg>
             <div id="legend"></div>
         </div>
 
+        <!-- Put this as a side toolbar: -->
         <div id="brushHelp" style="text-align:center; font-size:14px; opacity:0;">
             *Drag the shaded window on the line graph below to move the time interval, or drag its edges to resize it!*
         </div>
 
         <div style="text-align:center; margin:20px 0;">
-            <button id="playButton">▶ Play</button>
+            Animate price changes over time until today:<br>
+            <button id="playButton" style="margin-top:6px">▶ Play</button>
         </div>
 
         <div id="windowLabel" style="text-align:center; margin-top:6px; font-size:16px;">
-            Time Range:
         </div>
 
         <svg id="timeBrush" width="900" height="140"></svg>
+        
+        <h3 style="text-align:center">
+            Crypto Prices Over Time
+        </h3>
 
         <script type="module" src="jimmy-vis.js"></script>
     </section>

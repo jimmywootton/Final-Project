@@ -286,9 +286,14 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
         if (seriesData.length === 0) return;
 
         // Update window label
-        const fmt = d3.timeFormat("%Y-%m-%d %H:%M");
-        windowLabel.textContent =
-            `Window: ${fmt(startDate)}  →  ${fmt(endDate)}`;
+        const fmtDate = d3.timeFormat("%Y-%m-%d");
+        const fmtTime = d3.timeFormat("%H:%M");
+        if (windowLabel) {
+            windowLabel.innerHTML = `Time Range:<br>
+            <strong>${fmtDate(startDate)}</strong> (${fmtTime(startDate)}) 
+            &nbsp;→&nbsp; 
+            <strong>${fmtDate(endDate)}</strong> (${fmtTime(endDate)})`;
+        }
 
         // Y domain: padded around min/max
         // 1. Find max absolute percent move
