@@ -5,15 +5,22 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
     const dateColumn = "time";
     const selectedValueColumns = [
         "BTCUSDT_Open",
+        "DOGEUSDT_Open",
         "ETHUSDT_Open",
         "SOLUSDT_Open",
-        "DOGEUSDT_Open"
+        "USDCUSDT_Open"
     ];
-    const valueColumns = [
+    const allValueColumns = [
+        "ADAUSDT_Open",
+        "BNBUSDT_Open",
         "BTCUSDT_Open",
+        "DOGEUSDT_Open",
         "ETHUSDT_Open",
+        "LINKUSDT_Open",
         "SOLUSDT_Open",
-        "DOGEUSDT_Open"
+        "TRXUSDT_Open",
+        "USDCUSDT_Open",
+        "XRPUSDT_Open"
     ];
 
     // ==== SVG & LAYOUT ====
@@ -54,13 +61,13 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
     const xTime = d3.scaleTime().range([0, brushInnerWidth]); // for the brush
     const xBand = d3
         .scaleBand()
-        .domain(valueColumns)
+        .domain(selectedValueColumns)
         .range([0, barInnerWidth])
         .padding(0.3); // for bar chart categories
 
     const yBar = d3.scaleLinear().range([barInnerHeight, 0]); // % change
 
-    const color = d3.scaleOrdinal(d3.schemeTableau10).domain(valueColumns);
+    const color = d3.scaleOrdinal(d3.schemeTableau10).domain(selectedValueColumns);
 
     // ==== AXES ====
     const xTimeAxis = d3.axisBottom(xTime);
@@ -106,7 +113,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
             // If your "time" is a timestamp (ms) instead of ISO string, use:
             // d[dateColumn] = new Date(+d[dateColumn]);
             d[dateColumn] = new Date(d[dateColumn]);
-            for (const col of valueColumns) {
+            for (const col of selectedValueColumns) {
                 d[col] = +d[col];
             }
         });
@@ -122,12 +129,12 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
         // Optional: draw a line for one series in the brush area (e.g., BTC)
 
         const maxByColumn = {};
-        valueColumns.forEach(col => {
+        selectedValueColumns.forEach(col => {
             maxByColumn[col] = d3.max(rawData, d => d[col]);
         });
 
         // For each series draw its own line
-        valueColumns.forEach(col => {
+        selectedValueColumns.forEach(col => {
             const line = d3
                 .line()
                 .x(d => xTime(d[dateColumn]))
@@ -177,7 +184,6 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
         setTimeout(() => {
             document.getElementById("brushHelp").style.opacity = 1;
         }, 300);
-
 
         // ====== PLAYBACK ANIMATION ======
 
@@ -270,11 +276,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
         const last = windowData[windowData.length - 1];
 
         // Compute % change for each series
-        const seriesData = valueColumns.map(col => {
-
-
-
-
+        const seriesData = selectedValueColumns.map(col => {
             const startVal = first[col];
             const endVal = last[col];
             let pct = null;
@@ -315,6 +317,14 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
         // Update y axis
         barG.select(".y-axis").call(yBarAxis);
+
+        // ⭐ Make Y-axis tick labels bigger (only numeric ticks)
+        barG.selectAll(".y-axis .tick text")
+            .filter(function() {
+                return !isNaN(parseFloat(this.textContent.trim()));
+            })
+            .style("font-size", "18px")
+            .style("font-weight", "400");
 
         // Update zero line
         const zeroY = yBar(0);
@@ -378,6 +388,8 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
             .attr("class", "bar-label")
             .attr("x", d => xBand(d.key) + xBand.bandwidth() / 2)
             .attr("y", d => (d.pct >= 0 ? yBar(d.pct) : zeroY) - 4)
+            .style("font-size", "24px")     // ⭐ MAKE LABELS BIGGER
+            .style("font-weight", "600")    // optional: bold-ish
             .text(d => d.pct.toFixed(1) + "%")
             .merge(labels)
             .transition()
@@ -421,7 +433,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
         const items = legend
             .selectAll(".legend-item")
-            .data(valueColumns)
+            .data(selectedValueColumns)
             .enter()
             .append("div")
             .attr("class", "legend-item")

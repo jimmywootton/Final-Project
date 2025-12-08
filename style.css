@@ -73,6 +73,30 @@ svg {
     margin-bottom: 10px;
 }
 
+#legend {
+    font-size: 16px !important;
+}
+
+#legend .legend-title {
+    font-size: 18px !important;
+}
+
+.bar-label {
+    font-size: 16px !important;
+}
+
+.axis text {
+    font-size: 16px !important;
+}
+
+#windowLabel {
+    font-size: 18px !important;
+}
+
+#playButton {
+    font-size: 16px !important;
+}
+
 /* ===== Fade-in animation ===== */
 
 @keyframes fadeIn {
@@ -158,4 +182,21 @@ svg {
     display: flex;        /* Flexbox, activates horizontal alignment capabilities */
     flex-direction: row;  /* Left-to-Right flow */
     align-items: flex-start; 
+}
+
+
+/* Brush: */
+#timeBrush .tick text {
+    font-size: 18px !important;   /* increase this number as you like */
+    font-family: Georgia, serif;
+}
+#timeBrush .tick text[tick-value*="20"] {
+    font-size: 22px !important;     /* ← change size here */
+    font-weight: bold;
+}
+#timeBrush .axis-title {
+    font-size: 20px !important;
+}
+#timeBrush .tick line {
+    stroke-width: 2px;
 }
