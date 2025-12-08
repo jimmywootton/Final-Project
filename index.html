@@ -2,94 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Final Project Prototype</title>
+    <title>Crypto Scrollytelling Intro</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-
-    <!-- FULLSCREEN SHORTHAND-STYLE INTRO -->
-    <section id="fullscreen-title" class="hero">
-        <div class="hero-content">
-            <h1>Welcome to the Crypto Explorer</h1>
-            <p>Dive into the world of cryptocurrency trends and insights</p>
+    <nav class="navbar">
+        <div class="logo">Crypto Intro</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="prototype/index.html">Visualization</a>
         </div>
+    </nav>
 
-        <div class="scroll-hint">
-            <p>Scroll down to explore</p>
-            <span>⬇</span>
-        </div>
-    </section>
+    <div class="scroll-container">
 
-    <h1>Final Project Prototype</h1>
-    <p style="text-align:center; margin-top: -10px; font-size: 16px; color:#555;">
-        By: Brian Jing &nbsp;•&nbsp; James Wootton &nbsp;•&nbsp; Su Love Wai &nbsp;•&nbsp; Taylor Chiu
-    </p>
+        <!-- Panel 1 -->
+        <section class="panel">
+            <h1 class="title">Beginner Guide to Cryptocurrency</h1>
+            <p class="fade-text">
+                A promise to a safe and reliable source that is protected and for the people.</strong>
+            </p>
+            <div class="scroll-hint">
+                <p>Scroll down to begin</p>
+                <span>⬇</span>
+            </div>
+        </section>
 
-    <!-- JIMMY (Interactive Vis) -->
-    <section id="vis3" class="compact-section">
-        <h2>Interactive Crypto Rate-of-Change Explorer</h2>
+        <!-- Panel 2 -->
+        <section class="panel">
+            <p class="fade-text">
+              Cryptocurrency is a form of digital or virtual money secured by cryptography and built on a technology called blockchain, which records and verifies transactions across a distributed network of computers.
+            </p>
+        </section>
 
-        <div class="chart-container">
-            <svg id="barChart" width="900" height="280"></svg>
-        </div>
+        <!-- Panel 3 -->
+        <section class="panel">
+            <p class="fade-text">
+                In 2008, an anonymous person introduced a new form of money into the market. Because it’s decentralized and not issued by any single government or central authority, cryptocurrency lets people send money directly to each other without intermediaries like banks.
+            </p>
+        </section>
 
-        <div id="windowLabel" style="text-align:center; margin-top:5px; font-size:14px;">
-            Window:
-        </div>
+        <!-- Panel 4 -->
+        <section class="panel">
+            <p class="fade-text">
+              Some cryptocurrencies can be used like money for payments or transfers, while others serve additional roles — for instance, enabling smart contracts or serving as tokens for applications beyond simple currency.
+            </p>
+        </section>
 
-        <div style="text-align:center; margin:10px 0;">
-            <button id="playButton">▶ Play</button>
-        </div>
+        <!-- Panel 5 -->
+        <section class="panel">
+            <p class="fade-text">
+                Like all investments, this site is not guaranteeing any success because cryptocurrencies also face drawbacks: their prices can swing widely, mining and transaction validation can consume a lot of energy, and because transactions can be pseudonymous, some cryptocurrencies have been used for illicit activities.
+            </p>
+        </section>
 
-        <div id="brushHelp" style="text-align:center; font-size:13px; opacity:0;">
-            Tip: Drag the window to move it across time, or drag its edges to resize it.
-        </div>
+        <!-- Panel 6 -->
+        <section class="panel">
+            <p class="fade-text">Ready to explore?</p>
+            <a href="prototype/index.html">
+                <button class="enter-button">Continue to Prototype</button>
+            </a>
+        </section>
 
-        <svg id="timeBrush" width="900" height="140"></svg>
+    </div>
 
-        <div id="legend"></div>
+    <!-- Fade-in Scroll Animation -->
+    <script>
+    const fadeTexts = document.querySelectorAll('.fade-text');
 
-        <script type="module" src="jimmy-vis.js"></script>
-    </section>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    }, { threshold: 0.3 });
 
-    <!-- BRIAN’s Visualization -->
-    <section id="vis2">
-        <h2>Crypto Price Movement Comparison (D3 Line Chart)</h2>
-        <div id="chart"></div>
-        <script type="module" src="brian-jing-vis-dynamic.js"></script>
-    </section>
-
-    <!-- TAYLOR (static image) -->
-    <section id="vis1">
-        <h2>Crypto Trends</h2>
-        <img src="images/cryptocurrency_trends.png" alt="Taylor Visual" />
-    </section>
-
-    <!-- WRITEUP -->
-    <section id="writeup">
-        <h2>Prototype Writeup</h2>
-
-        <p>
-            <strong>What have we done so far?</strong><br><br>
-            So far, we have collected and cleaned multiple cryptocurrency datasets and built a webpage that displays all three visualizations. 
-            We created an interactive rate-of-change tool that lets users drag or resize a time window to instantly see percentage changes across different assets. 
-            We also added a D3 line chart to show long-term price movements and a normalized trend visualization to highlight comparisons across coins. 
-            The webpage structure and layout are in place, so users can already explore the data in meaningful ways.
-        </p>
-
-        <br><br>
-
-        <p>
-            <strong>What will be the most challenging part of our project to design and why?</strong><br><br>
-            The most challenging part of our project will be dealing with the complexity of the crypto datasets themselves. 
-            Because each coin behaves differently and has its own level of volatility, it can be difficult to create visualizations that highlight meaningful patterns without overwhelming the viewer. 
-            Another challenge is ensuring that the interactive and static visuals work smoothly together so users can explore the data without confusion. 
-            We also need to think about how to explain trends in a way that feels intuitive, since crypto price movements are often fast, noisy, and unpredictable. 
-            Overall, the hardest part will be turning messy, high-volume time-series data into something clean, readable, and genuinely meaningful for users.
-        </p>
-
-    </section>
+    fadeTexts.forEach(text => observer.observe(text));
+    </script>
 
 </body>
 </html>

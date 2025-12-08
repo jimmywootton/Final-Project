@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Final Project Prototype</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">Crypto Explorer</div>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="index.html">Visualization</a>
+        </div>
+    </nav>
+
+    <section class="title-block">
+        <h1>Final Project Prototype</h1>
+        <p class="authors">
+            By: Brian Jing &nbsp;•&nbsp; James Wootton &nbsp;•&nbsp; Su Love Wai &nbsp;•&nbsp; Taylor Chiu
+        </p>
+    </section>
+
+    <!-- JIMMY (Interactive Vis) -->
+    <section id="vis3" class="compact-section">
+        <h2>Interactive Crypto Rate-of-Change Explorer</h2>
+
+        <div class="chart-container">
+            <svg id="barChart" width="900" height="280"></svg>
+        </div>
+
+        <div id="windowLabel" class="window-label">Window:</div>
+
+        <div class="play-button-container">
+            <button id="playButton">▶ Play</button>
+        </div>
+
+        <div id="brushHelp" class="brush-help">
+            Tip: Drag the window to move it across time, or drag its edges to resize it.
+        </div>
+
+        <svg id="timeBrush" width="900" height="140"></svg>
+
+        <div id="legend"></div>
+
+        <script type="module" src="jimmy-vis.js"></script>
+    </section>
+
+    <!-- BRIAN’S LINE CHART -->
+    <section id="vis2" class="scrolly-section">
+        <h2>Crypto Price Movement Comparison (D3 Line Chart)</h2>
+        <div id="chart"></div>
+        <script type="module" src="brian-jing-vis-dynamic.js"></script>
+    </section>
+
+    <!-- TAYLOR Static Image -->
+    <section id="vis1" class="scrolly-section">
+        <h2>Crypto Trends</h2>
+        <img src="images/cryptocurrency_trends.png" alt="Taylor Visual" />
+    </section>
+
+    <!-- WRITEUP -->
+    <section id="writeup" class="writeup-section">
+        <h2>Prototype Writeup</h2>
+
+        <p>
+            <strong>What have we done so far?</strong><br><br>
+            So far, we have collected and cleaned multiple cryptocurrency datasets and built a webpage that displays all three visualizations. 
+            We created an interactive rate-of-change tool that lets users drag or resize a time window to instantly see percentage changes across different assets. 
+            We also added a D3 line chart to show long-term price movements and a normalized trend visualization to highlight comparisons across coins. 
+            The webpage structure and layout are in place, so users can already explore the data in meaningful ways.
+        </p>
+
+        <br><br>
+
+        <p>
+            <strong>What will be the most challenging part of our project to design and why?</strong><br><br>
+            The most challenging part of our project will be dealing with the complexity of the crypto datasets themselves. 
+            Because each coin behaves differently and has its own level of volatility, it can be difficult to create visualizations that highlight meaningful patterns without overwhelming the viewer. 
+            Another challenge is ensuring that the interactive and static visuals work smoothly together so users can explore the data without confusion. 
+            We also need to think about how to explain trends in a way that feels intuitive, since crypto price movements are often fast, noisy, and unpredictable. 
+            Overall, the hardest part will be turning messy, high-volume time-series data into something clean, readable, and genuinely meaningful for users.
+        </p>
+    </section>
+
+</body>
+</html>

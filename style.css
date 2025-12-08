@@ -1,149 +1,118 @@
-/* ===== Global Page Styling ===== */
-
+/* Full-page gradient background */
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     margin: 0;
     padding: 0;
-    background: #f7f9fc;
-    color: #222;
-}
-
-h1 {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 32px;
-}
-
-/* ===== Default Section Styling (EXCLUDES HERO) ===== */
-
-section:not(.hero) {
-    max-width: 900px;
-    margin: 50px auto;
-    padding: 30px;
-    background: white;
-    border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-    animation: fadeIn 0.8s ease-in-out;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Center charts */
-.chart-container,
-#chart {
-    display: flex;
-    justify-content: center;
-}
-
-/* Static images */
-img {
-    max-width: 85%;
-    margin: 0 auto;
-    display: block;
-    border-radius: 8px;
-}
-
-/* Standardize SVG sizes */
-svg {
-    display: block;
-    margin: 0 auto;
-    max-width: 90%;
-}
-
-/* Legend styling  */
-.legend {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
-
-.compact-section {
-    padding: 12px 20px !important;
-}
-
-.compact-section h2 {
-    margin-bottom: 10px;
-}
-
-/* ===== Fade-in animation ===== */
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#writeup p {
-    text-align: justify;
-}
-
-/* ===== Fullscreen Hero Section ===== */
-
-.hero {
-    height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0a0f2d, #1d2f6f, #5c7aea);
+    background-attachment: fixed;
+    color: white;
+    overflow-x: hidden;
+  }
+  
+  /* Scroll container */
+  .scroll-container {
     width: 100%;
-    background: linear-gradient(to bottom, #4facfe, #00f2fe);
+    height: 100%;
+  }
+  
+  /* Each scrollytelling panel */
+  .panel {
+    height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    position: relative;
-    color: white;
-    padding: 0 20px;
-    box-sizing: border-box;
-}
-
-/* Hero Text */
-.hero-content h1 {
-    font-size: 6rem;
+    padding: 0 15vw;
+    text-align: center;
+  }
+  
+  /* Title section */
+  .title {
+    font-size: 4.5rem;
     font-weight: 800;
-    margin: 0;
-    line-height: 1.1;
-    text-align: center;
-}
-
-.hero-content p {
-    margin-top: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    animation: fadeIn 2s ease-in-out;
+  }
+  
+  /* Scrollytelling text */
+  .fade-text {
     font-size: 1.6rem;
-    text-align: center;
-}
-
-/* Scroll hint */
-.scroll-hint {
-    position: absolute;
-    bottom: 25px;
-    text-align: center;
-    animation: fadeBounce 1.8s infinite;
-}
-
-.scroll-hint p {
-    margin: 0;
-    font-size: 1rem;
-}
-
-.scroll-hint span {
-    font-size: 2rem;
-}
-
-/* Scroll hint animation */
-@keyframes fadeBounce {
-    0% { opacity: 0.4; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(8px); }
-    100% { opacity: 0.4; transform: translateY(0); }
-}
-
-/* ===== Scroll Reveal Sections ===== */
-
-.reveal {
+    line-height: 1.8;
     opacity: 0;
     transform: translateY(40px);
-    transition: all 0.8s ease-out;
+    transition: opacity 1s ease, transform 1s ease;
+    max-width: 900px;
+  }
+  
+  /* Continue button */
+  .enter-button {
+    margin-top: 50px;
+    padding: 15px 40px;
+    font-size: 1.4rem;
+    background-color: #5c7aea;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+  }
+  
+  .enter-button:hover {
+    background-color: #1d2f6f;
+    transform: scale(1.1);
+  }
+  
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll hint styling */
+  .scroll-hint {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    animation: fadeBounce 1.8s infinite;
+  }
+
+  .scroll-hint span {
+    font-size: 1.5rem;
+    display: block;
+    margin-top: 5px;
+  }
+
+  /* Navigation bar styling */
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(10, 15, 45, 0.9);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
 
-.reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: #5c7aea;
+}
+
+.navbar .nav-links {
+    display: flex;
+    align-items: center;
 }
