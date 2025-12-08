@@ -5,15 +5,22 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
     const dateColumn = "time";
     const selectedValueColumns = [
         "BTCUSDT_Open",
+        "DOGEUSDT_Open",
         "ETHUSDT_Open",
         "SOLUSDT_Open",
-        "DOGEUSDT_Open"
+        "USDCUSDT_Open"
     ];
-    const valueColumns = [
+    const allValueColumns = [
+        "ADAUSDT_Open",
+        "BNBUSDT_Open",
         "BTCUSDT_Open",
+        "DOGEUSDT_Open",
         "ETHUSDT_Open",
+        "LINKUSDT_Open",
         "SOLUSDT_Open",
-        "DOGEUSDT_Open"
+        "TRXUSDT_Open",
+        "USDCUSDT_Open",
+        "XRPUSDT_Open"
     ];
 
     // ==== SVG & LAYOUT ====
@@ -54,13 +61,13 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
     const xTime = d3.scaleTime().range([0, brushInnerWidth]); // for the brush
     const xBand = d3
         .scaleBand()
-        .domain(valueColumns)
+        .domain(selectedValueColumns)
         .range([0, barInnerWidth])
         .padding(0.3); // for bar chart categories
 
     const yBar = d3.scaleLinear().range([barInnerHeight, 0]); // % change
 
-    const color = d3.scaleOrdinal(d3.schemeTableau10).domain(valueColumns);
+    const color = d3.scaleOrdinal(d3.schemeTableau10).domain(selectedValueColumns);
 
     // ==== AXES ====
     const xTimeAxis = d3.axisBottom(xTime);
@@ -106,7 +113,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
             // If your "time" is a timestamp (ms) instead of ISO string, use:
             // d[dateColumn] = new Date(+d[dateColumn]);
             d[dateColumn] = new Date(d[dateColumn]);
-            for (const col of valueColumns) {
+            for (const col of selectedValueColumns) {
                 d[col] = +d[col];
             }
         });
@@ -122,12 +129,12 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
         // Optional: draw a line for one series in the brush area (e.g., BTC)
 
         const maxByColumn = {};
-        valueColumns.forEach(col => {
+        selectedValueColumns.forEach(col => {
             maxByColumn[col] = d3.max(rawData, d => d[col]);
         });
 
         // For each series draw its own line
-        valueColumns.forEach(col => {
+        selectedValueColumns.forEach(col => {
             const line = d3
                 .line()
                 .x(d => xTime(d[dateColumn]))
@@ -269,7 +276,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
         const last = windowData[windowData.length - 1];
 
         // Compute % change for each series
-        const seriesData = valueColumns.map(col => {
+        const seriesData = selectedValueColumns.map(col => {
             const startVal = first[col];
             const endVal = last[col];
             let pct = null;
@@ -426,7 +433,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
         const items = legend
             .selectAll(".legend-item")
-            .data(valueColumns)
+            .data(selectedValueColumns)
             .enter()
             .append("div")
             .attr("class", "legend-item")
