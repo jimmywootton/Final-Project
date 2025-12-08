@@ -147,3 +147,11 @@ svg {
     opacity: 1;
     transform: translateY(0);
 }
+
+
+/* Rule for legend on the side of the graph */
+.chart-row {
+    display: flex;        /* Flexbox, activates horizontal alignment capabilities */
+    flex-direction: row;  /* Left-to-Right flow */
+    align-items: flex-start; 
+}

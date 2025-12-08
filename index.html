@@ -30,8 +30,9 @@
     <section id="vis3" class="compact-section">
         <h2>Interactive Crypto Rate-of-Change Explorer</h2>
 
-        <div class="chart-container">
+        <div class="chart-row">
             <svg id="barChart" width="900" height="280"></svg>
+            <div id="legend"></div>
         </div>
 
         <div id="windowLabel" style="text-align:center; margin-top:5px; font-size:14px;">
@@ -47,8 +48,6 @@
         </div>
 
         <svg id="timeBrush" width="900" height="140"></svg>
-
-        <div id="legend"></div>
 
         <script type="module" src="jimmy-vis.js"></script>
     </section>
