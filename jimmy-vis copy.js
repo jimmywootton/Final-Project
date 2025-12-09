@@ -18,7 +18,9 @@ const allValueColumns = [
 ];
 
 // Initially selected coins
-let selectedValueColumns = [];
+let selectedValueColumns = [
+
+];
 
 // ==== SVG & LAYOUT ====
 const barSvg = d3.select("#barChart");
@@ -98,177 +100,6 @@ let brushSelection;
 let playing = false;
 let playInterval = null;
 
-// ==== CREATE DATE RANGE SELECTOR ====
-function createDateRangeSelector() {
-    const container = d3.select("#coinSelector");
-    
-    // Add date range controls after the coin checkboxes
-    const dateControls = container
-        .append("div")
-        .attr("id", "dateRangeControls")
-        .style("margin-top", "20px")
-        .style("padding-top", "15px")
-        .style("border-top", "2px solid #ddd");
-    
-    dateControls
-        .append("h3")
-        .style("margin-bottom", "10px")
-        .text("Custom Date Range:");
-    
-    const dateInputs = dateControls
-        .append("div")
-        .style("display", "flex")
-        .style("gap", "15px")
-        .style("align-items", "center")
-        .style("justify-content", "center")
-        .style("flex-wrap", "wrap");
-    
-    // Start date input
-    const startGroup = dateInputs
-        .append("div")
-        .style("display", "flex")
-        .style("flex-direction", "column")
-        .style("gap", "5px");
-    
-    startGroup
-        .append("label")
-        .attr("for", "startDate")
-        .style("font-size", "13px")
-        .style("font-weight", "500")
-        .text("Start Date:");
-    
-    const startInput = startGroup
-        .append("input")
-        .attr("type", "date")
-        .attr("id", "startDate")
-        .style("padding", "6px 10px")
-        .style("border", "1px solid #ccc")
-        .style("border-radius", "4px")
-        .style("font-size", "14px");
-    
-    // End date input
-    const endGroup = dateInputs
-        .append("div")
-        .style("display", "flex")
-        .style("flex-direction", "column")
-        .style("gap", "5px");
-    
-    endGroup
-        .append("label")
-        .attr("for", "endDate")
-        .style("font-size", "13px")
-        .style("font-weight", "500")
-        .text("End Date:");
-    
-    const endInput = endGroup
-        .append("input")
-        .attr("type", "date")
-        .attr("id", "endDate")
-        .style("padding", "6px 10px")
-        .style("border", "1px solid #ccc")
-        .style("border-radius", "4px")
-        .style("font-size", "14px");
-    
-    // Apply button
-    dateInputs
-        .append("button")
-        .attr("id", "applyDateRange")
-        .style("padding", "8px 20px")
-        .style("background-color", "#4CAF50")
-        .style("color", "white")
-        .style("border", "none")
-        .style("border-radius", "4px")
-        .style("font-size", "14px")
-        .style("font-weight", "500")
-        .style("cursor", "pointer")
-        .style("align-self", "flex-end")
-        .text("Apply Range")
-        .on("click", applyCustomDateRange);
-    
-    // Reset button
-    dateInputs
-        .append("button")
-        .attr("id", "resetDateRange")
-        .style("padding", "8px 20px")
-        .style("background-color", "#f44336")
-        .style("color", "white")
-        .style("border", "none")
-        .style("border-radius", "4px")
-        .style("font-size", "14px")
-        .style("font-weight", "500")
-        .style("cursor", "pointer")
-        .style("align-self", "flex-end")
-        .text("Reset")
-        .on("click", resetDateRange);
-    
-    // Set initial values based on data range
-    if (rawData && rawData.length > 0) {
-        const extent = d3.extent(rawData, d => d[dateColumn]);
-        const formatDate = d3.timeFormat("%Y-%m-%d");
-        
-        startInput.property("value", formatDate(extent[0]));
-        endInput.property("value", formatDate(extent[1]));
-        
-        // Set min/max attributes
-        startInput.attr("min", formatDate(extent[0]));
-        startInput.attr("max", formatDate(extent[1]));
-        endInput.attr("min", formatDate(extent[0]));
-        endInput.attr("max", formatDate(extent[1]));
-    }
-}
-
-function applyCustomDateRange() {
-    const startInput = document.getElementById("startDate");
-    const endInput = document.getElementById("endDate");
-    
-    if (!startInput.value || !endInput.value) {
-        alert("Please select both start and end dates");
-        return;
-    }
-    
-    const startDate = new Date(startInput.value);
-    const endDate = new Date(endInput.value);
-    
-    if (startDate >= endDate) {
-        alert("Start date must be before end date");
-        return;
-    }
-    
-    // Convert dates to brush positions
-    const x0 = xTime(startDate);
-    const x1 = xTime(endDate);
-    
-    // Clamp to valid range
-    const clampedX0 = Math.max(0, Math.min(brushInnerWidth, x0));
-    const clampedX1 = Math.max(0, Math.min(brushInnerWidth, x1));
-    
-    if (clampedX0 >= clampedX1) {
-        alert("Selected date range is outside available data");
-        return;
-    }
-    
-    // Apply the brush selection
-    brushSelection.call(brush.move, [clampedX0, clampedX1]);
-}
-
-function resetDateRange() {
-    if (!rawData || rawData.length === 0) return;
-    
-    const extent = d3.extent(rawData, d => d[dateColumn]);
-    const formatDate = d3.timeFormat("%Y-%m-%d");
-    
-    document.getElementById("startDate").value = formatDate(extent[0]);
-    document.getElementById("endDate").value = formatDate(extent[1]);
-    
-    // Reset brush to middle 40%
-    const [x0, x1] = xTime.range();
-    const initialSel = [
-        x0 + (x1 - x0) * 0.3,
-        x0 + (x1 - x0) * 0.7
-    ];
-    brushSelection.call(brush.move, initialSel);
-}
-
 // ==== CREATE COIN SELECTOR ====
 function createCoinSelector() {
     const selectorContainer = d3.select("#coinSelector");
@@ -334,9 +165,6 @@ d3.csv(csvPath).then(data => {
     
     // Create coin selector
     createCoinSelector();
-    
-    // Create date range selector
-    createDateRangeSelector();
     
     // Initial setup
     setupBrush();
@@ -431,16 +259,6 @@ function brushed({ selection }) {
     const [x0, x1] = selection;
     const startDate = xTime.invert(x0);
     const endDate = xTime.invert(x1);
-
-    // Update the date inputs to reflect current brush selection
-    const formatDate = d3.timeFormat("%Y-%m-%d");
-    const startInput = document.getElementById("startDate");
-    const endInput = document.getElementById("endDate");
-    
-    if (startInput && endInput) {
-        startInput.value = formatDate(startDate);
-        endInput.value = formatDate(endDate);
-    }
 
     updateBars(startDate, endDate);
 }
