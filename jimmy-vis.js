@@ -18,7 +18,11 @@ const allValueColumns = [
 ];
 
 // Initially selected coins
-let selectedValueColumns = [];
+let selectedValueColumns = [
+    "BTCUSDT_Open",
+    "DOGEUSDT_Open",
+    "ETHUSDT_Open",
+];
 
 // ==== SVG & LAYOUT ====
 const barSvg = d3.select("#barChart");
@@ -226,8 +230,9 @@ function applyCustomDateRange() {
         return;
     }
     
-    const startDate = new Date(startInput.value);
-    const endDate = new Date(endInput.value);
+    // Parse dates in local timezone by appending time
+    const startDate = new Date(startInput.value + "T00:00:00");
+    const endDate = new Date(endInput.value + "T23:59:59");
     
     if (startDate >= endDate) {
         alert("Start date must be before end date");
@@ -335,6 +340,7 @@ d3.csv(csvPath).then(data => {
     // Create coin selector
     createCoinSelector();
     
+    xBand.domain(selectedValueColumns);
     // Create date range selector
     createDateRangeSelector();
     

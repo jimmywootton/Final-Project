@@ -29,7 +29,7 @@
     <!-- JIMMY (Interactive Vis) -->
     <section id="vis3" class="compact-section">
         <h2>Avg Daily Price Change Over Interval (%)</h2>
-
+        <h3>*Axis Scale May Change To Show Relative Proportion</h3>
         <div class="chart-row">
             <svg id="barChart" width="900" height="280"></svg>
             <div id="legend"></div>
@@ -42,13 +42,12 @@
         <!-- ADD THIS BEFORE THE BAR CHART -->
 
         <div style="text-align:center; margin-top:20px; margin:20px 0;">
-            Animate price changes over time until today:<br>
+
             <button id="playButton" style="margin-top:6px">▶ Play</button>
         </div>
-
         <div id="windowLabel" style="text-align:center; margin-top:6px; font-size:16px;">
         </div>
-
+        <h3>Drag Edges to Change Window Size:</h3>
         <svg id="timeBrush" width="900" height="140"></svg>
         
         <div id="coinSelector" style="text-align:center; margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 8px;">
