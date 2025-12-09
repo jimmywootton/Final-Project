@@ -1,390 +1,485 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-    // ==== CONFIG ====
-    const csvPath = "data/timeseries.csv";
-    const dateColumn = "time";
-    const valueColumns = [
-        "BTCUSDT_Open",
-        "ETHUSDT_Open",
-        "SOLUSDT_Open",
-        "DOGEUSDT_Open"
-    ];
+// ==== CONFIG ====
+const csvPath = "data/timeseries.csv";
+const dateColumn = "time";
 
-    // ==== SVG & LAYOUT ====
-    const barSvg = d3.select("#barChart");
-    const brushSvg = d3.select("#timeBrush");
+// All available coins
+const allValueColumns = [
+    "ADAUSDT_Open",
+    "BNBUSDT_Open",
+    "BTCUSDT_Open",
+    "DOGEUSDT_Open",
+    "ETHUSDT_Open",
+    "LINKUSDT_Open",
+    "SOLUSDT_Open",
+    "TRXUSDT_Open",
+    "XRPUSDT_Open"
+];
 
-    const barWidth = +barSvg.attr("width");
-    const barHeight = +barSvg.attr("height");
+// Initially selected coins
+let selectedValueColumns = [
+    "BTCUSDT_Open",
+    "DOGEUSDT_Open",
+    "ETHUSDT_Open",
+    "SOLUSDT_Open"
+];
 
-    const brushWidth = +brushSvg.attr("width");
-    const brushHeight = +brushSvg.attr("height");
+// ==== SVG & LAYOUT ====
+const barSvg = d3.select("#barChart");
+const brushSvg = d3.select("#timeBrush");
 
-    const barMargin = { top: 20, right: 20, bottom: 40, left: 70 };
-    const barInnerWidth = barWidth - barMargin.left - barMargin.right;
-    const barInnerHeight = barHeight - barMargin.top - barMargin.bottom;
+const barWidth = +barSvg.attr("width");
+const barHeight = +barSvg.attr("height");
 
-    const brushMargin = { top: 20, right: 20, bottom: 30, left: 50 };
-    const brushInnerWidth = brushWidth - brushMargin.left - brushMargin.right;
-    const brushInnerHeight = brushHeight - brushMargin.top - brushMargin.bottom;
+barSvg
+    .attr("viewBox", `0 0 ${barWidth} ${barHeight}`)
+    .style("width", "100%")
+    .style("height", "auto")
+    .style("min-width", "0");
 
-    const barG = barSvg
-        .append("g")
-        .attr("transform", `translate(${barMargin.left},${barMargin.top})`);
+const brushWidth = +brushSvg.attr("width");
+const brushHeight = +brushSvg.attr("height");
 
-    const brushG = brushSvg
-        .append("g")
-        .attr("transform", `translate(${brushMargin.left},${brushMargin.top})`);
+const barMargin = { top: 20, right: 20, bottom: 40, left: 70 };
+const barInnerWidth = barWidth - barMargin.left - barMargin.right;
+const barInnerHeight = barHeight - barMargin.top - barMargin.bottom;
 
-    // ==== SCALES ====
-    const xTime = d3.scaleTime().range([0, brushInnerWidth]); // for the brush
-    const xBand = d3
-        .scaleBand()
-        .domain(valueColumns)
-        .range([0, barInnerWidth])
-        .padding(0.3); // for bar chart categories
+const brushMargin = { top: 20, right: 20, bottom: 30, left: 50 };
+const brushInnerWidth = brushWidth - brushMargin.left - brushMargin.right;
+const brushInnerHeight = brushHeight - brushMargin.top - brushMargin.bottom;
 
-    const yBar = d3.scaleLinear().range([barInnerHeight, 0]); // % change
+const barG = barSvg
+    .append("g")
+    .attr("transform", `translate(${barMargin.left},${barMargin.top})`);
 
-    const color = d3.scaleOrdinal(d3.schemeCategory10).domain(valueColumns);
+const brushG = brushSvg
+    .append("g")
+    .attr("transform", `translate(${brushMargin.left},${brushMargin.top})`);
 
-    // ==== AXES ====
-    const xTimeAxis = d3.axisBottom(xTime);
-    const yBarAxis = d3.axisLeft(yBar).tickFormat(d => d + "%");
+// ==== SCALES ====
+const xTime = d3.scaleTime().range([0, brushInnerWidth]);
+const xBand = d3.scaleBand().range([0, barInnerWidth]).padding(0.3);
 
-    brushG
-        .append("g")
-        .attr("class", "x-axis")
-        .attr("transform", `translate(0,${brushInnerHeight})`);
+const yBar = d3.scaleLinear().range([barInnerHeight, 0]);
 
-    barG
-        .append("g")
-        .attr("class", "y-axis");
+const color = d3.scaleOrdinal(d3.schemeTableau10).domain(allValueColumns);
 
-    // Zero line for bar chart
-    const zeroLine = barG
-        .append("line")
-        .attr("class", "zero-line")
-        .attr("stroke", "#444")
-        .attr("stroke-dasharray", "4,3");
+// ==== AXES ====
+const xTimeAxis = d3.axisBottom(xTime);
+const yBarAxis = d3.axisLeft(yBar).tickFormat(d => d + "%");
 
-    // Tooltip (for bars)
-    const tooltip = d3
-        .select("body")
-        .append("div")
-        .style("position", "absolute")
-        .style("padding", "6px 8px")
-        .style("background", "rgba(0,0,0,0.7)")
-        .style("color", "#fff")
-        .style("border-radius", "4px")
-        .style("font-size", "12px")
-        .style("pointer-events", "none")
-        .style("opacity", 0);
+brushG
+    .append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(0,${brushInnerHeight})`);
 
-    const windowLabel = document.getElementById("windowLabel");
+barG.append("g").attr("class", "y-axis");
 
-    let rawData;
+const zeroLine = barG
+    .append("line")
+    .attr("class", "zero-line")
+    .attr("stroke", "#444")
+    .attr("stroke-dasharray", "4,3");
 
-    // ==== LOAD DATA ====
-    d3.csv(csvPath).then(data => {
-        // Parse date + numerics
-        data.forEach(d => {
-            // If your "time" is a timestamp (ms) instead of ISO string, use:
-            // d[dateColumn] = new Date(+d[dateColumn]);
-            d[dateColumn] = new Date(d[dateColumn]);
-            for (const col of valueColumns) {
-                d[col] = +d[col];
-            }
-        });
+// Tooltip
+const tooltip = d3
+    .select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("padding", "6px 8px")
+    .style("background", "rgba(0,0,0,0.7)")
+    .style("color", "#fff")
+    .style("border-radius", "4px")
+    .style("font-size", "12px")
+    .style("pointer-events", "none")
+    .style("opacity", 0);
 
-        rawData = data;
+const windowLabel = document.getElementById("windowLabel");
 
-        // Set time domain
-        xTime.domain(d3.extent(rawData, d => d[dateColumn]));
+let rawData;
+let brush;
+let brushSelection;
+let playing = false;
+let playInterval = null;
 
-        // Draw x axis for brush
-        brushG.select(".x-axis").call(xTimeAxis);
-
-        // Optional: draw a line for one series in the brush area (e.g., BTC)
-
-        const maxByColumn = {};
-        valueColumns.forEach(col => {
-            maxByColumn[col] = d3.max(rawData, d => d[col]);
-        });
-
-        // For each series draw its own line
-        valueColumns.forEach(col => {
-            const line = d3
-                .line()
-                .x(d => xTime(d[dateColumn]))
-                .y(d => {
-                    return (
-                        brushInnerHeight -
-                        (d[col] / maxByColumn[col]) * brushInnerHeight
-                    );
-                });
-
-            brushG
-                .append("path")
-                .datum(rawData)
-                .attr("fill", "none")
-                .attr("stroke", color(col))   // consistent coloring with main chart
-                .attr("stroke-width", 1)
-                .attr("opacity", 0.7)
-                .attr("d", line);
-        });
-
-
-
-        // ==== BRUSH ====
-        const brush = d3
-            .brushX()
-            .extent([
-                [0, 0],
-                [brushInnerWidth, brushInnerHeight]
-            ])
-            .on("brush end", brushed);
-
-        const brushSelection = brushG
-            .append("g")
-            .attr("class", "brush")
-            .call(brush);
-
-        // Set an initial window (middle 40% of the time range)
-        const [x0, x1] = xTime.range();
-        const initialSel = [
-            x0 + (x1 - x0) * 0.3,
-            x0 + (x1 - x0) * 0.7
-        ];
-        brushSelection.call(brush.move, initialSel);
-
-        // After brushSelection.call(brush.move, initialSel);
-
-        setTimeout(() => {
-            document.getElementById("brushHelp").style.opacity = 1;
-        }, 300);
-
-
-        // ====== PLAYBACK ANIMATION ======
-
-        let playing = false;
-        let playInterval = null;
-
-        const playButton = document.getElementById("playButton");
-
-        playButton.addEventListener("click", () => {
-            if (playing) {
-                stopPlayback();
-            } else {
-                startPlayback();
-            }
-        });
-
-        function startPlayback() {
-            playing = true;
-            playButton.textContent = "⏸ Pause";
-
-            // How far the window moves each step (in px)
-            const stepPx = 2;
-
-            playInterval = setInterval(() => {
-                const sel = d3.brushSelection(brushSelection.node());
-                if (!sel) return;
-
-                let [x0, x1] = sel;
-
-                // Move window
-                x0 += stepPx;
-                x1 += stepPx;
-
-                // If we run off the right edge, stop playback
-                if (x1 > brushInnerWidth) {
-                    stopPlayback();
-                    return;
+// ==== CREATE COIN SELECTOR ====
+function createCoinSelector() {
+    const selectorContainer = d3.select("#coinSelector");
+    
+    const checkboxes = selectorContainer
+        .selectAll(".coin-checkbox")
+        .data(allValueColumns)
+        .enter()
+        .append("label")
+        .attr("class", "coin-checkbox")
+        .style("display", "inline-block")
+        .style("margin", "5px 10px")
+        .style("cursor", "pointer");
+    
+    checkboxes
+        .append("input")
+        .attr("type", "checkbox")
+        .attr("value", d => d)
+        .property("checked", d => selectedValueColumns.includes(d))
+        .on("change", function(event, d) {
+            if (this.checked) {
+                if (!selectedValueColumns.includes(d)) {
+                    selectedValueColumns.push(d);
                 }
-
-                // Apply new window
-                brushSelection.call(brush.move, [x0, x1]);
-            }, 60); // Slow speed (16–20ms = fast; 60 = smooth+slow)
-        }
-
-        function stopPlayback() {
-            playing = false;
-            playButton.textContent = "▶ Play";
-
-            if (playInterval) {
-                clearInterval(playInterval);
-                playInterval = null;
+            } else {
+                selectedValueColumns = selectedValueColumns.filter(col => col !== d);
             }
-        }
-
-
-        // Draw legend
-        drawLegend();
-
-        // ==== BRUSH HANDLER ====
-        function brushed({ selection }) {
-            if (!selection) {
-                // If user clears selection, do nothing
+            
+            // Ensure at least one coin is selected
+            if (selectedValueColumns.length === 0) {
+                this.checked = true;
+                selectedValueColumns.push(d);
+                alert("At least one cryptocurrency must be selected!");
                 return;
             }
+            
+            updateVisualization();
+        });
+    
+    checkboxes
+        .append("span")
+        .style("margin-left", "5px")
+        .style("padding", "2px 8px")
+        .style("border-radius", "3px")
+        .style("background-color", d => color(d))
+        .style("color", "white")
+        .style("font-size", "13px")
+        .style("font-weight", "500")
+        .text(d => d.replace("USDT_Open", ""));
+}
 
-            const [x0, x1] = selection;
-
-            const startDate = xTime.invert(x0);
-            const endDate = xTime.invert(x1);
-
-            updateBars(startDate, endDate);
+// ==== LOAD DATA ====
+d3.csv(csvPath).then(data => {
+    data.forEach(d => {
+        d[dateColumn] = new Date(d[dateColumn]);
+        for (const col of allValueColumns) {
+            d[col] = +d[col];
         }
     });
 
-    // ==== UPDATE BAR CHART BASED ON WINDOW ====
-    function updateBars(startDate, endDate) {
-        if (!rawData) return;
+    rawData = data;
+    xTime.domain(d3.extent(rawData, d => d[dateColumn]));
+    
+    // Create coin selector
+    createCoinSelector();
+    
+    xBand.domain(selectedValueColumns);
+    // Initial setup
+    setupBrush();
+    drawBrushLines();
+    drawLegend();
+    
+    brushG.select(".x-axis").call(xTimeAxis);
+    
+    // Set initial brush selection
+    const [x0, x1] = xTime.range();
+    const initialSel = [
+        x0 + (x1 - x0) * 0.3,
+        x0 + (x1 - x0) * 0.7
+    ];
+    brushSelection.call(brush.move, initialSel);
+});
 
-        const windowData = rawData.filter(d => {
-            const t = d[dateColumn];
-            return t >= startDate && t <= endDate;
-        });
+// ==== SETUP BRUSH ====
+function setupBrush() {
+    brush = d3
+        .brushX()
+        .extent([
+            [0, 0],
+            [brushInnerWidth, brushInnerHeight]
+        ])
+        .on("brush end", brushed);
 
-        // Need at least 2 points to compute change
-        if (windowData.length < 2) {
+    brushSelection = brushG
+        .append("g")
+        .attr("class", "brush")
+        .call(brush);
+}
+
+// ==== DRAW BRUSH LINES ====
+function drawBrushLines() {
+    // Remove old lines
+    brushG.selectAll("path.coin-line").remove();
+    
+    const maxByColumn = {};
+    selectedValueColumns.forEach(col => {
+        maxByColumn[col] = d3.max(rawData, d => d[col]);
+    });
+
+    selectedValueColumns.forEach(col => {
+        const line = d3
+            .line()
+            .x(d => xTime(d[dateColumn]))
+            .y(d => {
+                return (
+                    brushInnerHeight -
+                    (d[col] / maxByColumn[col]) * brushInnerHeight
+                );
+            });
+
+        brushG
+            .append("path")
+            .attr("class", "coin-line")
+            .datum(rawData)
+            .attr("fill", "none")
+            .attr("stroke", color(col))
+            .attr("stroke-width", 1)
+            .attr("opacity", 0.7)
+            .attr("d", line);
+    });
+}
+
+// ==== UPDATE VISUALIZATION ====
+function updateVisualization() {
+    // Update band scale domain
+    xBand.domain(selectedValueColumns);
+    
+    // Redraw brush lines
+    drawBrushLines();
+    
+    // Redraw legend
+    drawLegend();
+    
+    // Update bars with current brush selection
+    const sel = d3.brushSelection(brushSelection.node());
+    if (sel) {
+        const [x0, x1] = sel;
+        const startDate = xTime.invert(x0);
+        const endDate = xTime.invert(x1);
+        updateBars(startDate, endDate);
+    }
+}
+
+// ==== BRUSH HANDLER ====
+function brushed({ selection }) {
+    if (!selection) return;
+
+    const [x0, x1] = selection;
+    const startDate = xTime.invert(x0);
+    const endDate = xTime.invert(x1);
+
+    updateBars(startDate, endDate);
+}
+
+// ==== UPDATE BAR CHART ====
+function updateBars(startDate, endDate) {
+    if (!rawData) return;
+
+    const windowData = rawData.filter(d => {
+        const t = d[dateColumn];
+        return t >= startDate && t <= endDate;
+    });
+
+    if (windowData.length < 2) return;
+
+    const first = windowData[0];
+    const last = windowData[windowData.length - 1];
+
+    const seriesData = selectedValueColumns.map(col => {
+        const startVal = first[col];
+        const endVal = last[col];
+        let pct = null;
+
+        if (startVal == null || !isFinite(startVal) || startVal === 0) {
+            pct = null;
+        } else {
+            pct = ((endVal - startVal) / startVal) * 100;
+        }
+
+        return { key: col, pct };
+    }).filter(d => d.pct != null);
+
+    if (seriesData.length === 0) return;
+
+    const fmtDate = d3.timeFormat("%Y-%m-%d");
+    const fmtTime = d3.timeFormat("%H:%M");
+    if (windowLabel) {
+        windowLabel.innerHTML = `Time Range:<br>
+        <strong>${fmtDate(startDate)}</strong> (${fmtTime(startDate)}) 
+        &nbsp;→&nbsp; 
+        <strong>${fmtDate(endDate)}</strong> (${fmtTime(endDate)})`;
+    }
+
+    const maxAbs = d3.max(seriesData, d => Math.abs(d.pct)) || 1;
+    const pad = maxAbs * 0.2;
+    yBar.domain([-(maxAbs + pad), +(maxAbs + pad)]);
+
+    barG.select(".y-axis").call(yBarAxis);
+    barG.selectAll(".y-axis .tick text")
+        .filter(function() {
+            return !isNaN(parseFloat(this.textContent.trim()));
+        })
+        .style("font-size", "18px")
+        .style("font-weight", "400");
+
+    const zeroY = yBar(0);
+    zeroLine
+        .attr("x1", 0)
+        .attr("x2", barInnerWidth)
+        .attr("y1", zeroY)
+        .attr("y2", zeroY);
+
+    const bars = barG
+        .selectAll("rect.bar")
+        .data(seriesData, d => d.key);
+
+    bars
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", d => xBand(d.key))
+        .attr("width", xBand.bandwidth())
+        .attr("fill", d => color(d.key))
+        .attr("y", zeroY)
+        .attr("height", 0)
+        .on("mousemove", (event, d) => {
+            tooltip
+                .style("opacity", 1)
+                .html(`<strong>${d.key}</strong><br>${d.pct.toFixed(2)}%`)
+                .style("left", event.pageX + 10 + "px")
+                .style("top", event.pageY - 28 + "px");
+        })
+        .on("mouseleave", () => {
+            tooltip.style("opacity", 0);
+        })
+        .merge(bars)
+        .transition()
+        .duration(250)
+        .attr("x", d => xBand(d.key))
+        .attr("width", xBand.bandwidth())
+        .attr("y", d => {
+            const v = d.pct;
+            return v >= 0 ? yBar(v) : zeroY;
+        })
+        .attr("height", d => {
+            const v = d.pct;
+            return Math.abs(yBar(v) - zeroY);
+        })
+        .attr("fill", d => color(d.key));
+
+    bars.exit().remove();
+
+    const labels = barG
+        .selectAll("text.bar-label")
+        .data(seriesData, d => d.key);
+
+    labels
+        .enter()
+        .append("text")
+        .attr("class", "bar-label")
+        .attr("x", d => xBand(d.key) + xBand.bandwidth() / 2)
+        .attr("y", d => (d.pct >= 0 ? yBar(d.pct) : zeroY) - 4)
+        .style("font-size", "24px")
+        .style("font-weight", "600")
+        .text(d => d.pct.toFixed(1) + "%")
+        .merge(labels)
+        .transition()
+        .duration(250)
+        .attr("x", d => xBand(d.key) + xBand.bandwidth() / 2)
+        .attr("y", d => (d.pct >= 0 ? yBar(d.pct) : zeroY) - 4)
+        .text(d => d.pct.toFixed(1) + "%");
+
+    labels.exit().remove();
+}
+
+// ==== LEGEND ====
+function drawLegend() {
+    const legend = d3.select("#legend");
+    
+    legend
+        .style("border", "1px solid #333")
+        .style("border-radius", "4px")
+        .style("padding", "15px")
+        .style("background-color", "white")
+        .style("display", "inline-block")
+        .style("vertical-align", "top")
+        .style("margin-left", "20px")
+        .style("box-shadow", "2px 2px 5px rgba(0,0,0,0.1)");
+    
+    legend.selectAll(".legend-item").remove();
+    legend.selectAll(".legend-title").remove();
+
+    legend.append("div")
+        .attr("class", "legend-title")
+        .text("Selected Coins")
+        .style("font-weight", "bold")
+        .style("font-family", "sans-serif")
+        .style("margin-bottom", "10px")
+        .style("font-size", "16px")
+        .style("border-bottom", "1px solid #eee")
+        .style("padding-bottom", "5px");
+
+    const items = legend
+        .selectAll(".legend-item")
+        .data(selectedValueColumns)
+        .enter()
+        .append("div")
+        .attr("class", "legend-item")
+        .style("display", "flex")
+        .style("align-items", "center")
+        .style("margin-bottom", "8px");
+
+    items
+        .append("div")
+        .attr("class", "legend-swatch")
+        .style("width", "15px")
+        .style("height", "15px")
+        .style("margin-right", "8px")
+        .style("border-radius", "3px")
+        .style("background-color", d => color(d));
+    
+    items.append("span")
+        .text(d => d.replace("USDT_Open", ""))
+        .style("font-size", "14px")
+        .style("font-family", "sans-serif");
+}
+
+// ==== PLAYBACK ANIMATION ====
+const playButton = document.getElementById("playButton");
+
+playButton.addEventListener("click", () => {
+    if (playing) {
+        stopPlayback();
+    } else {
+        startPlayback();
+    }
+});
+
+function startPlayback() {
+    playing = true;
+    playButton.textContent = "⏸ Pause";
+
+    const stepPx = 2;
+
+    playInterval = setInterval(() => {
+        const sel = d3.brushSelection(brushSelection.node());
+        if (!sel) return;
+
+        let [x0, x1] = sel;
+        x0 += stepPx;
+        x1 += stepPx;
+
+        if (x1 > brushInnerWidth) {
+            stopPlayback();
             return;
         }
 
-        const first = windowData[0];
-        const last = windowData[windowData.length - 1];
+        brushSelection.call(brush.move, [x0, x1]);
+    }, 60);
+}
 
-        // Compute % change for each series
-        const seriesData = valueColumns.map(col => {
+function stopPlayback() {
+    playing = false;
+    playButton.textContent = "▶ Play";
 
-
-
-
-            const startVal = first[col];
-            const endVal = last[col];
-            let pct = null;
-
-            if (startVal == null || !isFinite(startVal) || startVal === 0) {
-                pct = null;
-            } else {
-                pct = ((endVal - startVal) / startVal) * 100;
-            }
-
-            return {
-                key: col,
-                pct
-            };
-        }).filter(d => d.pct != null);
-
-        if (seriesData.length === 0) return;
-
-        // Update window label
-        const fmt = d3.timeFormat("%Y-%m-%d %H:%M");
-        windowLabel.textContent =
-            `Window: ${fmt(startDate)}  →  ${fmt(endDate)}`;
-
-        // Y domain: padded around min/max
-        // 1. Find max absolute percent move
-        const maxAbs = d3.max(seriesData, d => Math.abs(d.pct)) || 1;
-
-        // 2. Pad it a bit
-        const pad = maxAbs * 0.2;
-
-        // 3. Force zero in the middle
-        yBar.domain([-(maxAbs + pad), +(maxAbs + pad)]);
-
-        // Update y axis
-        barG.select(".y-axis").call(yBarAxis);
-
-        // Update zero line
-        const zeroY = yBar(0);
-        zeroLine
-            .attr("x1", 0)
-            .attr("x2", barInnerWidth)
-            .attr("y1", zeroY)
-            .attr("y2", zeroY);
-
-        // DATA JOIN for bars
-        const bars = barG
-            .selectAll("rect.bar")
-            .data(seriesData, d => d.key);
-
-        bars
-            .enter()
-            .append("rect")
-            .attr("class", "bar")
-            .attr("x", d => xBand(d.key))
-            .attr("width", xBand.bandwidth())
-            .attr("fill", d => color(d.key))
-            .attr("y", zeroY)
-            .attr("height", 0)
-            .on("mousemove", (event, d) => {
-                tooltip
-                    .style("opacity", 1)
-                    .html(
-                        `<strong>${d.key}</strong><br>${d.pct.toFixed(2)}%`
-                    )
-                    .style("left", event.pageX + 10 + "px")
-                    .style("top", event.pageY - 28 + "px");
-            })
-            .on("mouseleave", () => {
-                tooltip.style("opacity", 0);
-            })
-            .merge(bars)
-            .transition()
-            .duration(250)
-            .attr("x", d => xBand(d.key))
-            .attr("width", xBand.bandwidth())
-            .attr("y", d => {
-                const v = d.pct;
-                return v >= 0 ? yBar(v) : zeroY;
-            })
-            .attr("height", d => {
-                const v = d.pct;
-                return Math.abs(yBar(v) - zeroY);
-            })
-            .attr("fill", d => color(d.key));
-
-        bars.exit().remove();
-
-        // DATA JOIN for labels above bars
-        const labels = barG
-            .selectAll("text.bar-label")
-            .data(seriesData, d => d.key);
-
-        labels
-            .enter()
-            .append("text")
-            .attr("class", "bar-label")
-            .attr("x", d => xBand(d.key) + xBand.bandwidth() / 2)
-            .attr("y", d => (d.pct >= 0 ? yBar(d.pct) : zeroY) - 4)
-            .text(d => d.pct.toFixed(1) + "%")
-            .merge(labels)
-            .transition()
-            .duration(250)
-            .attr("x", d => xBand(d.key) + xBand.bandwidth() / 2)
-            .attr("y", d => (d.pct >= 0 ? yBar(d.pct) : zeroY) - 4)
-            .text(d => d.pct.toFixed(1) + "%");
-
-        labels.exit().remove();
+    if (playInterval) {
+        clearInterval(playInterval);
+        playInterval = null;
     }
-
-    // ==== LEGEND ====
-    function drawLegend() {
-        const legend = d3.select("#legend");
-
-        const items = legend
-            .selectAll(".legend-item")
-            .data(valueColumns)
-            .enter()
-            .append("div")
-            .attr("class", "legend-item");
-
-        items
-            .append("div")
-            .attr("class", "legend-swatch")
-            .style("background-color", d => color(d));
-
-        items.append("span").text(d => d);
-    }
+}

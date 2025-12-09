@@ -21,37 +21,40 @@
             By: Brian Jing &nbsp;•&nbsp; James Wootton &nbsp;•&nbsp; Su Love Wai &nbsp;•&nbsp; Taylor Chiu
         </p>
     </section>
-
+    
     <!-- JIMMY (Interactive Vis) -->
     <section id="vis3" class="compact-section">
-        <h2>Interactive Crypto Rate-of-Change Explorer</h2>
+        <h2>Avg Daily Price Change Over Interval (%)</h2>
 
-        <div class="chart-container">
+        <div class="chart-row">
             <svg id="barChart" width="900" height="280"></svg>
+            <div id="legend"></div>
         </div>
 
-        <div id="windowLabel" class="window-label">Window:</div>
+        <!-- Add this as a tooltip on the left: -->
+        <!-- <div id="brushHelp" style="text-align:center; margin-top:0px; font-size:12px; opacity:0;">
+            *Drag the shaded window on the line graph above to move the time interval, or drag its edges to resize it!*
+        </div> -->
+        <!-- ADD THIS BEFORE THE BAR CHART -->
 
-        <div class="play-button-container">
-            <button id="playButton">▶ Play</button>
+        <div style="text-align:center; margin-top:20px; margin:20px 0;">
+            Animate price changes over time until today:<br>
+            <button id="playButton" style="margin-top:6px">▶ Play</button>
         </div>
 
-        <div id="brushHelp" class="brush-help">
-            Tip: Drag the window to move it across time, or drag its edges to resize it.
+        <div id="windowLabel" style="text-align:center; margin-top:6px; font-size:16px;">
         </div>
 
         <svg id="timeBrush" width="900" height="140"></svg>
-
-        <div id="legend"></div>
+        
+        <div id="coinSelector" style="text-align:center; margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 8px;">
+            <h3 style="margin-bottom: 10px;">Select Cryptocurrencies to Display:</h3>
+        </div>
+        <h3 style="text-align:center">
+            Crypto Prices Over Time<br>(Mid-2023 → Mid-2025)
+        </h3>
 
         <script type="module" src="jimmy-vis.js"></script>
-    </section>
-
-    <!-- BRIAN’S LINE CHART -->
-    <section id="vis2" class="scrolly-section">
-        <h2>Crypto Price Movement Comparison (D3 Line Chart)</h2>
-        <div id="chart"></div>
-        <script type="module" src="brian-jing-vis-dynamic.js"></script>
     </section>
 
     <!-- TAYLOR Static Image -->
