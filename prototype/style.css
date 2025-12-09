@@ -200,6 +200,7 @@ svg {
 
 .navbar .logo {
     margin-right: auto; /* Ensure logo stays on the left */
+    content: "Crypto Bros"; /* Update logo text */
 }
 
 .navbar .nav-links {

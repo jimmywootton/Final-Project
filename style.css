@@ -116,3 +116,7 @@ body {
     display: flex;
     align-items: center;
 }
+
+.navbar .logo {
+    content: "Crypto Bros"; /* Update logo text */
+}
