@@ -468,16 +468,22 @@ function updateBars(startDate, endDate) {
     const seriesData = selectedValueColumns.map(col => {
         const startVal = first[col];
         const endVal = last[col];
+    
         let pct = null;
-
         if (startVal == null || !isFinite(startVal) || startVal === 0) {
             pct = null;
         } else {
             pct = ((endVal - startVal) / startVal) * 100;
         }
-
-        return { key: col, pct };
+    
+        return {
+            key: col,
+            pct,
+            startVal,
+            endVal
+        };
     }).filter(d => d.pct != null);
+    
 
     if (seriesData.length === 0) return;
 
@@ -525,10 +531,16 @@ function updateBars(startDate, endDate) {
         .on("mousemove", (event, d) => {
             tooltip
                 .style("opacity", 1)
-                .html(`<strong>${d.key}</strong><br>${d.pct.toFixed(2)}%`)
-                .style("left", event.pageX + 10 + "px")
-                .style("top", event.pageY - 28 + "px");
-        })
+                .html(`
+                    <strong>${d.key.replace("USDT_Open","")}</strong><br>
+                    Start: $${d.startVal.toFixed(4)}<br>
+                    End: $${d.endVal.toFixed(4)}<br>
+                    Change: <strong>${d.pct.toFixed(2)}%</strong><br>
+                    <small>${fmtDate(startDate)} → ${fmtDate(endDate)}</small>
+                `)
+                .style("left", event.pageX + 12 + "px")
+                .style("top", event.pageY - 40 + "px");
+        })        
         .on("mouseleave", () => {
             tooltip.style("opacity", 0);
         })
