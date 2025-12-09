@@ -31,6 +31,12 @@ h2 {
     margin-bottom: 20px;
 }
 
+h3 {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+}
+
 /* Center charts */
 .chart-container,
 #chart {
@@ -94,7 +100,7 @@ svg {
 }
 
 #playButton {
-    font-size: 16px !important;
+    font-size: 20px !important;
 }
 
 /* ===== Fade-in animation ===== */

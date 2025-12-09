@@ -19,27 +19,33 @@
     <!-- JIMMY (Interactive Vis) -->
     <section id="vis3" class="compact-section">
         <h2>Avg Daily Price Change Over Interval (%)</h2>
-
+        <h3>*Axis Scale May Change To Show Relative Proportion</h3>
         <div class="chart-row">
             <svg id="barChart" width="900" height="280"></svg>
             <div id="legend"></div>
         </div>
 
+        <!-- Add this as a tooltip on the left: -->
+        <!-- <div id="brushHelp" style="text-align:center; margin-top:0px; font-size:12px; opacity:0;">
+            *Drag the shaded window on the line graph above to move the time interval, or drag its edges to resize it!*
+        </div> -->
+        <!-- ADD THIS BEFORE THE BAR CHART -->
+
         <div style="text-align:center; margin-top:20px; margin:20px 0;">
-            Animate price changes over time until today:<br>
+
             <button id="playButton" style="margin-top:6px">▶ Play</button>
         </div>
-        
-
+        <div id="windowLabel" style="text-align:center; margin-top:6px; font-size:16px;">
+        </div>
+        <h3>Drag Edges to Change Window Size:</h3>
         <svg id="timeBrush" width="900" height="140"></svg>
         
-        <h3 style="text-align:center">
-            Crypto Prices Over Time<br>(Mid-2023 → Mid-2025)
-        </h3>
-
         <div id="coinSelector" style="text-align:center; margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 8px;">
             <h3 style="margin-bottom: 10px;">Select Cryptocurrencies to Display:</h3>
         </div>
+        <h3 style="text-align:center">
+            Crypto Prices Over Time<br>(Mid-2023 → Mid-2025)
+        </h3>
 
         <script type="module" src="jimmy-vis.js"></script>
     </section>
