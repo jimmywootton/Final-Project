@@ -211,7 +211,7 @@ svg {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 10px 5%;
     box-sizing: border-box; /* Ensure padding is included in width */
     z-index: 1000;
 }
@@ -224,13 +224,14 @@ svg {
 .navbar .nav-links {
     display: flex;
     align-items: center;
-    gap: 15px; /* Adjust spacing between links */
+    gap: 20px; /* Adjust spacing between links */
+    flex-wrap: wrap; /* Ensure links wrap if the screen is too small */
 }
 
 .navbar a {
     color: white;
     text-decoration: none;
-    font-size: 1.1rem; /* Slightly smaller font size */
+    font-size: 1.2rem;
     transition: color 0.3s ease;
 }
 
