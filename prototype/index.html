@@ -1,3 +1,6 @@
+<!--  -->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +10,7 @@
 </head>
 
 <body>
+
     <nav class="navbar">
         <div class="logo">Crypto Explorer</div>
         <div class="nav-links">
@@ -15,13 +19,11 @@
         </div>
     </nav>
 
-    <section class="title-block">
-        <h1>Final Project Prototype</h1>
-        <p class="authors">
-            By: Brian Jing &nbsp;•&nbsp; James Wootton &nbsp;•&nbsp; Su Love Wai &nbsp;•&nbsp; Taylor Chiu
-        </p>
-    </section>
-    
+    <h1>Cryptocurrency Price Change Explorer</h1>
+    <p style="text-align:center; margin-top: -10px; font-size: 18px; color:#555;">
+        Brian Jing &nbsp;•&nbsp; James Wootton &nbsp;•&nbsp; Su Love Wai &nbsp;•&nbsp; Taylor Chiu
+    </p>
+
     <!-- JIMMY (Interactive Vis) -->
     <section id="vis3" class="compact-section">
         <h2>Avg Daily Price Change Over Interval (%)</h2>
@@ -57,14 +59,21 @@
         <script type="module" src="jimmy-vis.js"></script>
     </section>
 
-    <!-- TAYLOR Static Image -->
-    <section id="vis1" class="scrolly-section">
+    <!-- BRIAN’s Visualization
+    <section id="vis2">
+        <h2>Crypto Price Movement Comparison (D3 Line Chart)</h2>
+        <div id="chart"></div>
+        <script type="module" src="brian-jing-vis-dynamic.js"></script>
+    </section> -->
+
+    <!-- TAYLOR (static image) -->
+    <section id="vis1">
         <h2>Crypto Trends</h2>
         <img src="images/cryptocurrency_trends.png" alt="Taylor Visual" />
     </section>
 
     <!-- WRITEUP -->
-    <section id="writeup" class="writeup-section">
+    <section id="writeup">
         <h2>Prototype Writeup</h2>
 
         <p>
@@ -85,6 +94,7 @@
             We also need to think about how to explain trends in a way that feels intuitive, since crypto price movements are often fast, noisy, and unpredictable. 
             Overall, the hardest part will be turning messy, high-volume time-series data into something clean, readable, and genuinely meaningful for users.
         </p>
+
     </section>
 
 </body>
