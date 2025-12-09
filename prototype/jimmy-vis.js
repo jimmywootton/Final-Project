@@ -58,7 +58,7 @@ const brushG = brushSvg
     .attr("transform", `translate(${brushMargin.left},${brushMargin.top})`);
 
 // ==== SCALES ====
-const xTime = d3.scaleTime().range([0, brushInnerWidth]);
+const xTime = d3.scaleUtc().range([0, brushInnerWidth]);
 const xBand = d3.scaleBand().range([0, barInnerWidth]).padding(0.3);
 
 const yBar = d3.scaleLinear().range([barInnerHeight, 0]);
@@ -209,7 +209,7 @@ function createDateRangeSelector() {
     // Set initial values based on data range
     if (rawData && rawData.length > 0) {
         const extent = d3.extent(rawData, d => d[dateColumn]);
-        const formatDate = d3.timeFormat("%Y-%m-%d");
+        const formatDate = d3.utcFormat("%Y-%m-%d");
         
         startInput.property("value", formatDate(extent[0]));
         endInput.property("value", formatDate(extent[1]));
@@ -231,8 +231,9 @@ function applyCustomDateRange() {
         return;
     }
     
-    const startDate = new Date(startInput.value);
-    const endDate = new Date(endInput.value);
+    const parseUTC = d3.utcParse("%Y-%m-%d");
+    const startDate = parseUTC(startInput.value);
+    const endDate = parseUTC(endInput.value);
     
     if (startDate >= endDate) {
         alert("Start date must be before end date");
@@ -260,7 +261,7 @@ function resetDateRange() {
     if (!rawData || rawData.length === 0) return;
     
     const extent = d3.extent(rawData, d => d[dateColumn]);
-    const formatDate = d3.timeFormat("%Y-%m-%d");
+    const formatDate = d3.utcFormat("%Y-%m-%d");
     
     document.getElementById("startDate").value = formatDate(extent[0]);
     document.getElementById("endDate").value = formatDate(extent[1]);
@@ -327,8 +328,9 @@ function createCoinSelector() {
 
 // ==== LOAD DATA ====
 d3.csv(csvPath).then(data => {
+    const parseUTC = d3.utcParse("%Y-%m-%d");
     data.forEach(d => {
-        d[dateColumn] = new Date(d[dateColumn]);
+        d[dateColumn] = parseUTC(d[dateColumn]);
         for (const col of allValueColumns) {
             d[col] = +d[col];
         }
@@ -439,7 +441,7 @@ function brushed({ selection }) {
     const endDate = xTime.invert(x1);
 
     // Update the date inputs to reflect current brush selection
-    const formatDate = d3.timeFormat("%Y-%m-%d");
+    const formatDate = d3.utcFormat("%Y-%m-%d");
     const startInput = document.getElementById("startDate");
     const endInput = document.getElementById("endDate");
     
@@ -487,8 +489,8 @@ function updateBars(startDate, endDate) {
 
     if (seriesData.length === 0) return;
 
-    const fmtDate = d3.timeFormat("%Y-%m-%d");
-    const fmtTime = d3.timeFormat("%H:%M");
+    const fmtDate = d3.utcFormat("%Y-%m-%d");
+    const fmtTime = d3.utcFormat("%H:%M");
     if (windowLabel) {
         windowLabel.innerHTML = `Time Range:<br>
         <strong>${fmtDate(startDate)}</strong> (${fmtTime(startDate)}) 
