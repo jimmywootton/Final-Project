@@ -6,23 +6,37 @@ body {
     padding: 0;
     background: #f7f9fc;
     color: #222;
+    scroll-behavior: smooth;
 }
 
 h1 {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 20px;
     font-size: 32px;
+}
+
+/* Title block after hero */
+.title-block {
+    margin-top: 60px;
+}
+
+/* Smaller subtitle line */
+.authors {
+    text-align: center;
+    margin-top: -10px;
+    font-size: 15px;
+    color: #666;
 }
 
 /* ===== Default Section Styling (EXCLUDES HERO) ===== */
 
 section:not(.hero) {
     max-width: 900px;
-    margin: 50px auto;
-    padding: 30px;
+    margin: 60px auto;
+    padding: 35px;
     background: white;
-    border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -43,59 +57,141 @@ img {
     max-width: 85%;
     margin: 0 auto;
     display: block;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 /* Standardize SVG sizes */
 svg {
     display: block;
     margin: 0 auto;
-    max-width: 90%;
+    max-width: 92%;
 }
 
-/* Legend styling  */
-.legend {
+/* Legend styling */
+#legend {
     display: flex;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 12px;
     flex-wrap: wrap;
+    gap: 15px; /* Spacing between legend items */
 }
 
-#vis3.compact-section {
-    padding: 40px 40px !important;
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #444;
 }
 
+.legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 6px;
+}
+
+
+/* Compact section for Jimmy's ROC tool */
 .compact-section {
-    padding: 20px 27px !important;
+    padding: 20px 24px !important;
 }
 
 .compact-section h2 {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
-#legend {
-    font-size: 16px !important;
+.window-label {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 14px;
 }
 
-#legend .legend-title {
-    font-size: 18px !important;
+.play-button-container {
+    text-align: center;
+    margin: 10px 0;
 }
 
+.brush-help {
+    text-align: center;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Zero line for D3 bar chart */
+.zero-line {
+    shape-rendering: crispEdges; /* Ensures thin, sharp line */
+}
+
+/* ===== NEW CONTROL STYLES (Focus Area) ===== */
+.controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center controls horizontally */
+    gap: 15px; /* Spacing between dropdown group and custom inputs */
+    margin: 15px 0;
+    align-items: center;
+}
+
+.dropdown-group,
+.custom-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-inputs {
+    padding: 8px 15px; /* Added slight padding */
+    border-radius: 8px;
+    background-color: #f0f0f0; 
+}
+
+#date-range-select,
+#startDateInput,
+#endDateInput {
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+#applyCustomDate {
+    padding: 6px 12px;
+    background-color: #4facfe;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#applyCustomDate:hover {
+    background-color: #00f2fe;
+    color: #222;
+}
+
+/* D3 Bar Chart Labels */
 .bar-label {
-    font-size: 16px !important;
+    fill: #222;
+    font-size: 10px;
+    font-weight: 500;
+    text-anchor: middle;
 }
 
-.axis text {
-    font-size: 16px !important;
+/* D3 Axes */
+.x-axis path,
+.x-axis line,
+.y-axis path,
+.y-axis line {
+    stroke: #aaa;
 }
 
-#windowLabel {
-    font-size: 18px !important;
+.x-axis text,
+.y-axis text {
+    fill: #666;
+    font-size: 11px;
 }
 
-#playButton {
-    font-size: 16px !important;
-}
 
 /* ===== Fade-in animation ===== */
 
@@ -108,100 +204,7 @@ svg {
     text-align: justify;
 }
 
-/* ===== Fullscreen Hero Section ===== */
-
-.hero {
-    height: 100vh;
-    width: 100%;
-    background: linear-gradient(to bottom, #4facfe, #00f2fe);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: relative;
-    color: white;
-    padding: 0 20px;
-    box-sizing: border-box;
-}
-
-/* Hero Text */
-.hero-content h1 {
-    font-size: 6rem;
-    font-weight: 800;
-    margin: 0;
-    line-height: 1.1;
-    text-align: center;
-}
-
-.hero-content p {
-    margin-top: 20px;
-    font-size: 1.6rem;
-    text-align: center;
-}
-
-/* Scroll hint */
-.scroll-hint {
-    position: absolute;
-    bottom: 25px;
-    text-align: center;
-    animation: fadeBounce 1.8s infinite;
-}
-
-.scroll-hint p {
-    margin: 0;
-    font-size: 1rem;
-}
-
-.scroll-hint span {
-    font-size: 2rem;
-}
-
-/* Scroll hint animation */
-@keyframes fadeBounce {
-    0% { opacity: 0.4; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(8px); }
-    100% { opacity: 0.4; transform: translateY(0); }
-}
-
-/* ===== Scroll Reveal Sections ===== */
-
-.reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 0.8s ease-out;
-}
-
-.reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-/* Rule for legend on the side of the graph */
-.chart-row {
-    display: flex;        /* Flexbox, activates horizontal alignment capabilities */
-    flex-direction: row;  /* Left-to-Right flow */
-    align-items: flex-start; 
-}
-
-
-/* Brush: */
-#timeBrush .tick text {
-    font-size: 18px !important;   /* increase this number as you like */
-    font-family: Georgia, serif;
-}
-#timeBrush .tick text[tick-value*="20"] {
-    font-size: 22px !important;     /* ← change size here */
-    font-weight: bold;
-}
-#timeBrush .axis-title {
-    font-size: 20px !important;
-}
-#timeBrush .tick line {
-    stroke-width: 2px;
-}
-
-/* Navigation bar styling */
+/* ===== Navigation bar styling ===== */
 .navbar {
     position: fixed;
     top: 0;
@@ -211,27 +214,25 @@ svg {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 5%;
-    box-sizing: border-box; /* Ensure padding is included in width */
+    padding: 10px 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
 }
 
 .navbar .logo {
-    margin-right: auto; /* Ensure logo stays on the left */
-    content: "Crypto Bros"; /* Update logo text */
+    margin-right: auto;
 }
 
 .navbar .nav-links {
     display: flex;
     align-items: center;
-    gap: 20px; /* Adjust spacing between links */
-    flex-wrap: wrap; /* Ensure links wrap if the screen is too small */
+    gap: 15px;
 }
 
 .navbar a {
     color: white;
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     transition: color 0.3s ease;
 }
 
