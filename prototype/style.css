@@ -6,37 +6,23 @@ body {
     padding: 0;
     background: #f7f9fc;
     color: #222;
-    scroll-behavior: smooth;
 }
 
 h1 {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
     font-size: 32px;
-}
-
-/* Title block after hero */
-.title-block {
-    margin-top: 60px;
-}
-
-/* Smaller subtitle line */
-.authors {
-    text-align: center;
-    margin-top: -10px;
-    font-size: 15px;
-    color: #666;
 }
 
 /* ===== Default Section Styling (EXCLUDES HERO) ===== */
 
 section:not(.hero) {
     max-width: 900px;
-    margin: 60px auto;
-    padding: 35px;
+    margin: 50px auto;
+    padding: 30px;
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     animation: fadeIn 0.8s ease-in-out;
 }
 
@@ -57,71 +43,207 @@ img {
     max-width: 85%;
     margin: 0 auto;
     display: block;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 /* Standardize SVG sizes */
 svg {
     display: block;
     margin: 0 auto;
-    max-width: 92%;
+    max-width: 90%;
 }
 
-/* Legend styling */
-#legend {
+/* Legend styling  */
+.legend {
     display: flex;
     justify-content: center;
-    margin-top: 12px;
+    margin-top: 10px;
     flex-wrap: wrap;
-    gap: 15px; /* Spacing between legend items */
 }
 
-.legend-item {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #444;
+#vis3.compact-section {
+    padding: 40px 40px !important;
 }
 
-.legend-swatch {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-    margin-right: 6px;
-}
-
-
-/* Compact section for Jimmy's ROC tool */
 .compact-section {
-    padding: 20px 24px !important;
+    padding: 20px 27px !important;
 }
 
 .compact-section h2 {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
-.window-label {
-    text-align: center;
-    margin-top: 5px;
-    font-size: 14px;
+#legend {
+    font-size: 16px !important;
 }
 
-.play-button-container {
-    text-align: center;
-    margin: 10px 0;
+#legend .legend-title {
+    font-size: 18px !important;
 }
 
-.brush-help {
+.bar-label {
+    font-size: 16px !important;
+}
+
+.axis text {
+    font-size: 16px !important;
+}
+
+#windowLabel {
+    font-size: 18px !important;
+}
+
+#playButton {
+    font-size: 16px !important;
+}
+
+/* ===== Fade-in animation ===== */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#writeup p {
+    text-align: justify;
+}
+
+/* ===== Fullscreen Hero Section ===== */
+
+.hero {
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(to bottom, #4facfe, #00f2fe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    color: white;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Hero Text */
+.hero-content h1 {
+    font-size: 6rem;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
     text-align: center;
-    font-size: 13px;
+}
+
+.hero-content p {
+    margin-top: 20px;
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+/* Scroll hint */
+.scroll-hint {
+    position: absolute;
+    bottom: 25px;
+    text-align: center;
+    animation: fadeBounce 1.8s infinite;
+}
+
+.scroll-hint p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.scroll-hint span {
+    font-size: 2rem;
+}
+
+/* Scroll hint animation */
+@keyframes fadeBounce {
+    0% { opacity: 0.4; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(8px); }
+    100% { opacity: 0.4; transform: translateY(0); }
+}
+
+/* ===== Scroll Reveal Sections ===== */
+
+.reveal {
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transform: translateY(40px);
+    transition: all 0.8s ease-out;
 }
 
-/* Zero line for D3 bar chart */
-.zero-line {
-    shape-rendering: crispEdges; /* Ensures thin, sharp line */
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
+
+
+/* Rule for legend on the side of the graph */
+.chart-row {
+    display: flex;        /* Flexbox, activates horizontal alignment capabilities */
+    flex-direction: row;  /* Left-to-Right flow */
+    align-items: flex-start; 
+}
+
+
+/* Brush: */
+#timeBrush .tick text {
+    font-size: 18px !important;   /* increase this number as you like */
+    font-family: Georgia, serif;
+}
+#timeBrush .tick text[tick-value*="20"] {
+    font-size: 22px !important;     /* ← change size here */
+    font-weight: bold;
+}
+#timeBrush .axis-title {
+    font-size: 20px !important;
+}
+#timeBrush .tick line {
+    stroke-width: 2px;
+}
+
+/* ===== Navigation bar styling ===== */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(10, 15, 45, 0.9);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.navbar .logo {
+    margin-right: auto;
+}
+
+.navbar .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: #4facfe;
+}
+
+/* Active link styling */
+.navbar a.active {
+    color: #00f2fe;
+    font-weight: bold;
+}
+
+
 
 /* ===== NEW CONTROL STYLES (Focus Area) ===== */
 .controls-container {
@@ -190,58 +312,4 @@ svg {
 .y-axis text {
     fill: #666;
     font-size: 11px;
-}
-
-
-/* ===== Fade-in animation ===== */
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#writeup p {
-    text-align: justify;
-}
-
-/* ===== Navigation bar styling ===== */
-.navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: rgba(10, 15, 45, 0.9);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-}
-
-.navbar .logo {
-    margin-right: auto;
-}
-
-.navbar .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.1rem;
-    transition: color 0.3s ease;
-}
-
-.navbar a:hover {
-    color: #4facfe;
-}
-
-/* Active link styling */
-.navbar a.active {
-    color: #00f2fe;
-    font-weight: bold;
 }
